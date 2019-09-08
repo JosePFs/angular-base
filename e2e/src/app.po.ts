@@ -5,7 +5,9 @@ export class AppPage {
     return browser.get(browser.baseUrl) as Promise<any>;
   }
 
-  getTitleText() {
-    return element(by.css('app-root .content span')).getText() as Promise<string>;
+  getDasboardText() {
+    return element(
+      by.css('app-root .content a.main__dashboard-link')
+    ).getText() as Promise<string>;
   }
 }
