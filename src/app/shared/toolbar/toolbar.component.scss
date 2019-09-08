@@ -1,0 +1,15 @@
+.toolbar {
+  &__title > * {
+    display: flex;
+    align-items: center;
+  }
+  &__actions {
+    margin-left: auto;
+  }
+  &__actions > app-toolbar-actions > * {
+    padding: 0 16px;
+  }
+  &__actions > app-toolbar-actions > *:hover {
+    cursor: pointer;
+  }
+}

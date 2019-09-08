@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
@@ -10,6 +12,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  authenticationFailed = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -18,6 +21,11 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.buildForm();
+    this.listenFormChanges();
+  }
+
+  private buildForm() {
     this.loginForm = this.formBuilder.group({
       username: [
         null,
@@ -30,12 +38,24 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  private listenFormChanges() {
+    this.loginForm.valueChanges.subscribe(() => {
+      this.authenticationFailed = false;
+    });
+  }
+
   onSubmit() {
     if (!this.loginForm.valid) {
       return;
     }
     this.authService
       .authenticate(this.loginForm.getRawValue())
+      .pipe(
+        catchError((error: any) => {
+          this.authenticationFailed = true;
+          return throwError(error);
+        })
+      )
       .subscribe((response: { authentication: boolean }) => {
         if (true === response.authentication) {
           this.router.navigate(['dashboard']);

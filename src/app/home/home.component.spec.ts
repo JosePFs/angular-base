@@ -37,10 +37,10 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render dashboard link', () => {
-    const compiled = fixture.debugElement.nativeElement;
-    expect(
-      compiled.querySelector('.content a.main__dashboard-link').textContent
-    ).toContain('Dashboard');
-  });
+  // it('should render dashboard link', () => {
+  //   const compiled = fixture.debugElement.nativeElement;
+  //   expect(
+  //     compiled.querySelector('.content a.main__dashboard-link').textContent
+  //   ).toContain('Dashboard');
+  // });
 });

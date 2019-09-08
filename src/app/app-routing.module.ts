@@ -16,6 +16,7 @@ const routes: Routes = [
     path: 'dashboard',
     loadChildren: () =>
       import('./dashboard/dashboard.module').then(m => m.DashboardModule),
+    canLoad: [AuthGuard],
     canActivate: [AuthGuard]
   },
   {
@@ -32,4 +33,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, { enableTracing: false })],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

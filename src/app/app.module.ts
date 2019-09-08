@@ -7,10 +7,7 @@ import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [
-    AppRoutingModule,
-    CoreModule
-  ],
+  imports: [AppRoutingModule, CoreModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],

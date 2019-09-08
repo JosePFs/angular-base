@@ -1,0 +1,16 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="'navigation'"
+    [mode]="'push'"
+  >
+    <ng-container *ngTemplateOutlet="sidenavPanel"></ng-container>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <ng-container
+      *ngTemplateOutlet="sidenavContent; context: { $implicit: drawer }"
+    ></ng-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>
