@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost/angular-back/index.php'
+  username: 'username',
+  password: 'password'
 };
 
 /*
@@ -15,4 +16,3 @@ export const environment = {
  * on performance if an error is thrown.
  */
 import 'zone.js/dist/zone-error'; // Included with Angular CLI.
-
