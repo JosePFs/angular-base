@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ContentChild,
+  Input,
   TemplateRef,
   ViewEncapsulation
 } from '@angular/core';
@@ -16,6 +17,9 @@ import { SidenavPanelDirective } from 'src/app/shared/sidenav/sidenav-panel.dire
   encapsulation: ViewEncapsulation.None
 })
 export class SidenavComponent {
+  @Input() mode = 'over';
+  @Input() role = 'navigation';
+
   @ContentChild(SidenavPanelDirective, { read: TemplateRef, static: false })
   sidenavPanel!: SidenavPanelDirective;
   @ContentChild(SidenavContentDirective, { read: TemplateRef, static: false })

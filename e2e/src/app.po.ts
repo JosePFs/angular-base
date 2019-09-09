@@ -6,8 +6,8 @@ export class AppPage {
   }
 
   getDasboardText() {
-    return element(
-      by.css('app-root .content a.main__dashboard-link')
-    ).getText() as Promise<string>;
+    return element(by.css('.header__dashboard-link')).getText() as Promise<
+      string
+    >;
   }
 }

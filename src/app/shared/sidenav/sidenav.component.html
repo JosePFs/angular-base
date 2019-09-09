@@ -3,12 +3,12 @@
     #drawer
     class="sidenav"
     fixedInViewport
-    [attr.role]="'navigation'"
-    [mode]="'push'"
+    [attr.role]="role"
+    [mode]="mode"
   >
     <ng-container *ngTemplateOutlet="sidenavPanel"></ng-container>
   </mat-sidenav>
-  <mat-sidenav-content>
+  <mat-sidenav-content [attr.role]="main">
     <ng-container
       *ngTemplateOutlet="sidenavContent; context: { $implicit: drawer }"
     ></ng-container>
