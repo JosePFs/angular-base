@@ -1,7 +1,7 @@
 import { Directive } from '@angular/core';
 
 @Directive({
-  selector: '[appSidenavPanel]'
+  selector: 'app-sidenav-panel'
 })
 export class SidenavPanelDirective {
   constructor() {}

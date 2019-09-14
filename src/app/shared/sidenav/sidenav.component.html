@@ -6,7 +6,7 @@
     [attr.role]="role"
     [mode]="mode"
   >
-    <ng-container *ngTemplateOutlet="sidenavPanel"></ng-container>
+    <ng-content select="app-sidenav-panel"></ng-content>
   </mat-sidenav>
   <mat-sidenav-content [attr.role]="main">
     <ng-container
