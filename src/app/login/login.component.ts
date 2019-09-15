@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { first } from 'rxjs/operators';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
@@ -48,6 +49,7 @@ export class LoginComponent implements OnInit {
     }
     this.authService
       .authenticate(this.loginForm.getRawValue())
+      .pipe(first())
       .subscribe((authenticated: boolean) => {
         if (authenticated) {
           this.router.navigate(['dashboard']);

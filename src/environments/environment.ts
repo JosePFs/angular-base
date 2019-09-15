@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   username: 'username',
-  password: 'password'
+  password: 'password',
+  authUrl: 'assets/mocks/auth.json'
 };
 
 /*

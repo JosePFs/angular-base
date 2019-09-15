@@ -4,8 +4,8 @@ describe('Node', () => {
   it('should create an instance', () => {
     const node = new Node({});
     expect(node).toBeTruthy();
-    node.data = { id: 1 };
-    expect(node.data).toEqual({ id: 1 });
+    node.data = {};
+    expect(node.data).toEqual({});
     const next = new Node({});
     node.next = next;
     expect(node.next).toEqual(next);

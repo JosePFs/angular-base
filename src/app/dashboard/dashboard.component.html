@@ -22,13 +22,13 @@
       </app-toolbar-title>
       <app-toolbar-actions>
         <span routerLink="">Home</span>
-        <span (click)="onLogout()">Logout</span>
+        <span class="dashboard__logout" (click)="onLogout()">Logout</span>
       </app-toolbar-actions>
     </app-toolbar>
     <div class="grid-container">
       <mat-grid-list cols="2" rowHeight="350px">
         <mat-grid-tile
-          *ngFor="let card of cards | async"
+          *ngFor="let card of cards"
           [colspan]="card.cols"
           [rowspan]="card.rows"
         >

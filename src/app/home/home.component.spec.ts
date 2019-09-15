@@ -4,6 +4,7 @@ import {
   ComponentFixtureAutoDetect,
   TestBed
 } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FooterComponent } from 'src/app/home/footer/footer.component';
@@ -38,10 +39,10 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render dashboard link', () => {
-    const compiled = fixture.debugElement.nativeElement;
+  it('should insert dashboard link', () => {
     expect(
-      compiled.querySelector('.header__dashboard-link').textContent
+      fixture.debugElement.query(By.css('.header__dashboard-link'))
+        .nativeElement.textContent
     ).toContain('Dashboard');
   });
 });
