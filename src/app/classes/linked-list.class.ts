@@ -1,13 +1,19 @@
 import { Node } from './node.class';
 
-export class LinkedList {
-  private head: Node = null;
-  private tail: Node = null;
+export interface Sizeable {
+  size: number;
+}
+
+export class LinkedList<T> {
+  private head: Node<T> = null;
+  private tail: Node<T> = null;
+  private size = 0;
 
   constructor() {}
 
-  insertAtBeginning(data: any): Node {
-    const newNode = new Node(data);
+  insertAtBeginning(data: T): Node<T> {
+    const newNode = new Node<T>(data);
+    this.sumSize(data);
     if (null === this.head) {
       this.head = this.tail = newNode;
 
@@ -20,8 +26,9 @@ export class LinkedList {
     return newNode;
   }
 
-  insertAtEnd(data: any): Node {
-    const newNode = new Node(data);
+  insertAtEnd(data: T): Node<T> {
+    const newNode = new Node<T>(data);
+    this.sumSize(data);
     if (null === this.head) {
       this.head = this.tail = newNode;
 
@@ -34,7 +41,7 @@ export class LinkedList {
     return newNode;
   }
 
-  insertAt(index: number, data: any): Node {
+  insertAt(index: number, data: T): Node<T> {
     if (index < 0) {
       throw new Error('Index not valid');
     }
@@ -47,7 +54,8 @@ export class LinkedList {
     if (null === previous) {
       throw new Error('Node not found');
     }
-    const newNode = new Node(data);
+    const newNode = new Node<T>(data);
+    this.sumSize(data);
     newNode.next = previous.next;
     previous.next = newNode;
     if (previous === this.tail) {
@@ -57,7 +65,35 @@ export class LinkedList {
     return newNode;
   }
 
-  deleteAt(index: number): Node | null {
+  sortedInsert(data: T, by: string): Node<T> {
+    const newNode = new Node<T>(data);
+    this.sumSize(data);
+    if (null === this.head || this.head.data[by] >= newNode.data[by]) {
+      newNode.next = this.head;
+      this.head = newNode;
+      if (null === this.head.next) {
+        this.tail = this.head;
+      }
+    } else {
+      let current = this.head;
+      while (
+        current.next !== null &&
+        current.next.data[by] < newNode.data[by]
+      ) {
+        current = current.next;
+      }
+
+      newNode.next = current.next;
+      if (null === current.next) {
+        this.tail = newNode;
+      }
+      current.next = newNode;
+    }
+
+    return newNode;
+  }
+
+  deleteAt(index: number): Node<T> | null {
     if (null === this.head) {
       throw new Error('Empty list');
     }
@@ -66,6 +102,7 @@ export class LinkedList {
     }
 
     if (0 === index) {
+      this.subtractSize(this.head.data);
       this.head = this.head.next;
       if (null === this.head) {
         this.tail = null;
@@ -81,18 +118,22 @@ export class LinkedList {
       throw new Error('Node not found');
     }
 
+    this.subtractSize(previous.next.data);
     previous.next = previous.next.next;
     if (null === previous.next) {
       this.tail = previous;
+
+      return this.tail;
     }
 
     return this.head;
   }
 
-  deleteFirst(): Node | null {
+  deleteFirst(): Node<T> | null {
     if (null === this.head) {
       throw new Error('Empty list');
     }
+    this.subtractSize(this.head.data);
     if (this.head === this.tail) {
       this.tail = this.head.next;
     }
@@ -101,11 +142,12 @@ export class LinkedList {
     return this.head;
   }
 
-  deleteLast(): Node | null {
+  deleteLast(): Node<T> | null {
     if (null === this.head) {
       throw new Error('Empty list');
     }
 
+    this.subtractSize(this.tail.data);
     if (null === this.head.next) {
       this.head = this.tail = null;
 
@@ -125,7 +167,7 @@ export class LinkedList {
     return this.tail;
   }
 
-  getAt(index: number): Node | null {
+  getAt(index: number): Node<T> | null {
     let counter = 0;
     let node = this.head;
     while (node) {
@@ -139,13 +181,45 @@ export class LinkedList {
     return null;
   }
 
-  getFirst(): Node {
+  *[Symbol.iterator](): IterableIterator<Node<T>> {
+    let node = this.head;
+    while (node) {
+      yield node;
+      node = node.next;
+    }
+  }
+
+  getFirst(): Node<T> {
     return this.head;
   }
 
-  getLast(): Node {
+  getLast(): Node<T> {
     return this.tail;
   }
 
-  deleteList() {}
+  deleteList() {
+    this.size = 0;
+    this.head = null;
+    this.tail = null;
+  }
+
+  getSize(): number {
+    return this.size;
+  }
+
+  private sumSize(data: T | (T & Sizeable)) {
+    if (this.isSizeable(data)) {
+      this.size += data.size;
+    }
+  }
+
+  private subtractSize(data: T | (T & Sizeable)) {
+    if (this.isSizeable(data)) {
+      this.size -= data.size;
+    }
+  }
+
+  isSizeable(x: T | Sizeable): x is T & Sizeable {
+    return 'size' in x;
+  }
 }

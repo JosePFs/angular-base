@@ -1,19 +1,19 @@
-export class Node {
-  constructor(private _data: any, private _next: Node = null) {}
+export class Node<T> {
+  constructor(private _data: T = null, private _next: Node<T> = null) {}
 
-  get data(): any {
+  get data(): T {
     return this._data;
   }
 
-  set data(data: any) {
+  set data(data: T) {
     this._data = data;
   }
 
-  get next(): Node {
+  get next(): Node<T> {
     return this._next;
   }
 
-  set next(next: Node) {
+  set next(next: Node<T>) {
     this._next = next;
   }
 }

@@ -25,37 +25,125 @@
         <span class="dashboard__logout" (click)="onLogout()">Logout</span>
       </app-toolbar-actions>
     </app-toolbar>
-    <div class="grid-container">
-      <mat-grid-list cols="2" rowHeight="350px">
-        <mat-grid-tile
-          *ngFor="let card of cards"
-          [colspan]="card.cols"
-          [rowspan]="card.rows"
-        >
-          <mat-card class="dashboard-card">
-            <mat-card-header>
-              <mat-card-title>
-                {{ card.title }}
-                <button
-                  mat-icon-button
-                  class="more-button"
-                  [matMenuTriggerFor]="menu"
-                  aria-label="Toggle menu"
+    <form
+      class="form"
+      [formGroup]="addBookForm"
+      novalidate
+      (ngSubmit)="addBook()"
+    >
+      <mat-card class="shipping-card">
+        <mat-card-header>
+          <mat-card-title></mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="full-width">
+                <input
+                  type="text"
+                  matInput
+                  placeholder="title"
+                  formControlName="title"
+                />
+                <mat-error
+                  *ngIf="addBookForm.controls['title'].hasError('required')"
                 >
-                  <mat-icon>more_vert</mat-icon>
-                </button>
-                <mat-menu #menu="matMenu" xPosition="before">
-                  <button mat-menu-item>Expand</button>
-                  <button mat-menu-item>Remove</button>
-                </mat-menu>
-              </mat-card-title>
-            </mat-card-header>
-            <mat-card-content class="dashboard-card-content">
-              <div>Card Content Here</div>
-            </mat-card-content>
-          </mat-card>
-        </mat-grid-tile>
-      </mat-grid-list>
+                  title is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="full-width">
+                <input
+                  type="text"
+                  matInput
+                  placeholder="author"
+                  formControlName="author"
+                />
+                <mat-error
+                  *ngIf="addBookForm.controls['author'].hasError('required')"
+                >
+                  author is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="full-width">
+                <input
+                  type="number"
+                  matInput
+                  placeholder="size"
+                  formControlName="size"
+                />
+                <mat-error
+                  *ngIf="addBookForm.controls['size'].hasError('required')"
+                >
+                  size is <strong>required</strong>
+                </mat-error>
+                <mat-error
+                  *ngIf="addBookForm.controls['size'].hasError('maxInteger')"
+                >
+                  max size <strong>reached</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button
+            [disabled]="!addBookForm.valid"
+            mat-raised-button
+            color="primary"
+            type="submit"
+          >
+            Add
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </form>
+    <div *ngFor="let shelving of shelves; trackBy: trackByFn">
+      <div
+        class="grid-container"
+        *ngFor="let shelf of shelving | keyvalue; trackBy: trackByFn"
+      >
+        <mat-grid-list
+          class="grid-list-container"
+          cols="1"
+          rowHeight="150px"
+          *ngFor="let book of shelf.value | keyvalue; trackBy: trackByFn"
+        >
+          <mat-grid-tile>
+            <mat-card class="dashboard-card">
+              <mat-card-header>
+                <mat-card-title>
+                  {{ book.value.title }}
+                  <button
+                    mat-icon-button
+                    class="more-button"
+                    [matMenuTriggerFor]="menu"
+                    aria-label="Toggle menu"
+                  >
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu" xPosition="before">
+                    <button
+                      class="remove-book"
+                      mat-menu-item
+                      (click)="removeBook(book.key)"
+                    >
+                      Remove
+                    </button>
+                  </mat-menu>
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content class="dashboard-card-content">
+                <div>Author: {{ book.value.author }}</div>
+                <div>Size: {{ book.value.size }}</div>
+              </mat-card-content>
+            </mat-card>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </div>
     </div>
   </ng-container>
 </app-sidenav>

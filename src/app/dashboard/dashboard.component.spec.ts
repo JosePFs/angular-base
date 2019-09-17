@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { LibraryService } from 'src/app/core/services/library.service';
 import { HomeComponent } from 'src/app/home/home.component';
 import { HomeModule } from 'src/app/home/home.module';
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -15,6 +16,7 @@ describe('DashboardComponent', () => {
   let fixture: ComponentFixture<DashboardComponent>;
   let debugElement: DebugElement;
   let authService: AuthService;
+  let libraryService: LibraryService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -26,7 +28,7 @@ describe('DashboardComponent', () => {
         SharedModule,
         RouterTestingModule.withRoutes([{ path: '', component: HomeComponent }])
       ],
-      providers: [AuthService]
+      providers: [AuthService, LibraryService]
     }).compileComponents();
   }));
 
@@ -35,15 +37,12 @@ describe('DashboardComponent', () => {
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
     authService = debugElement.injector.get(AuthService);
+    libraryService = debugElement.injector.get(LibraryService);
     fixture.detectChanges();
   });
 
   it('should be created', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should have cards', () => {
-    expect(component.cards).toBeTruthy();
   });
 
   it('should be able to click logout', () => {
@@ -64,4 +63,35 @@ describe('DashboardComponent', () => {
       expect(authService.authenticated).toBe(false);
     });
   }));
+
+  it('should be able to click add and remove book', () => {
+    const componentSpyAdd = spyOn(component, 'addBook').and.callThrough();
+    const componentSpyRemove = spyOn(component, 'removeBook').and.callThrough();
+
+    component.shelves = libraryService.shelves(1, 1);
+    component.addBookForm.setValue({ title: '0', author: '0', size: 1 });
+
+    debugElement.query(By.css('.form')).triggerEventHandler('submit', null);
+    fixture.detectChanges();
+
+    debugElement
+      .query(By.css('.more-button'))
+      .triggerEventHandler('click', null);
+    fixture.detectChanges();
+
+    debugElement.query(By.css('.remove-book')).triggerEventHandler('click', 0);
+    fixture.detectChanges();
+
+    expect(componentSpyAdd).toHaveBeenCalled();
+    expect(componentSpyRemove).toHaveBeenCalled();
+  });
+
+  it('should be able to add and remove books', () => {
+    component.shelves = libraryService.shelves(1, 1);
+    component.addBookForm.setValue({ title: '0', author: '0', size: 1 });
+    component.addBook();
+    expect(component.shelves.length).toEqual(1);
+    component.removeBook(0);
+    expect(component.shelves.length).toEqual(0);
+  });
 });
