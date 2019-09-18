@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { LinkedList } from 'src/app/classes/linked-list.class';
 import { Book } from 'src/app/core/interfaces/book';
 import { SearchResult } from 'src/app/core/interfaces/search-result.interface';
@@ -8,23 +9,28 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class LibraryService {
-  books: LinkedList<Book> = new LinkedList<Book>();
-  shelfSize: number = environment.shelfSize;
-  shelvesSize: number = environment.shelvesSize;
+  private books: LinkedList<Book> = new LinkedList<Book>();
+  private shelfSize: number = environment.shelfSize;
+  private shelvesSize: number = environment.shelvesSize;
+  private shelves = new BehaviorSubject<Array<Array<Book>>>([]);
+  shelves$ = this.shelves.asObservable();
 
   constructor() {}
 
   add(book: Book) {
     this.books.sortedInsert(book, 'title');
+    this.shelves.next(this.getShelves());
   }
 
   delete(index: number) {
     this.books.deleteAt(index);
+    this.shelves.next(this.getShelves());
   }
 
   setSize(shelfSize: number, shelvesSize: number) {
     this.shelfSize = shelfSize;
     this.shelvesSize = shelvesSize;
+    this.shelves.next(this.getShelves());
   }
 
   getShelfSize(): number {

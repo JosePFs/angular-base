@@ -180,7 +180,7 @@
       </form>
     </div>
 
-    <div *ngFor="let shelving of shelves; trackBy: trackByFn">
+    <div *ngFor="let shelving of shelves$ | async; trackBy: trackByFn">
       <div
         class="grid-container grid-list-container"
         *ngFor="let shelf of shelving | keyvalue; trackBy: trackByFn"

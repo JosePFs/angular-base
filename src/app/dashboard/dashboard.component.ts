@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { Book } from 'src/app/core/interfaces/book';
 import { SearchResult } from 'src/app/core/interfaces/search-result.interface';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LibraryService } from 'src/app/core/services/library.service';
@@ -17,17 +19,19 @@ export class DashboardComponent implements OnInit {
   searchForm: FormGroup;
   sizesForm: FormGroup;
   searchResult: SearchResult;
+  shelves$: Observable<Book[][]>;
 
   constructor(
     private formBuilder: FormBuilder,
     private readonly router: Router,
     private readonly authService: AuthService,
     private readonly libraryService: LibraryService
-  ) {}
+  ) {
+    this.shelves$ = this.libraryService.shelves$;
+  }
 
   ngOnInit() {
     this.buildForms();
-    this.getShelves();
   }
 
   private buildForms() {
@@ -59,18 +63,12 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  private getShelves() {
-    this.shelves = this.libraryService.getShelves();
-  }
-
   addBook() {
     this.libraryService.add(this.addBookForm.getRawValue());
-    this.shelves = this.libraryService.getShelves();
   }
 
   removeBook(index: number) {
     this.libraryService.delete(Number(index));
-    this.shelves = this.libraryService.getShelves();
   }
 
   searchBook() {
@@ -89,7 +87,6 @@ export class DashboardComponent implements OnInit {
       this.sizesForm.get('shelfSize').value,
       this.sizesForm.get('shelvesSize').value
     );
-    this.shelves = this.libraryService.getShelves();
   }
 
   trackByFn(index: number) {
