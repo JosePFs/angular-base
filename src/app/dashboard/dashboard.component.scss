@@ -21,4 +21,27 @@
   .dashboard-card-content {
     text-align: center;
   }
+
+  .row > * {
+    margin: 0 16px;
+  }
+
+  .search-result__label {
+    padding: 8px;
+  }
+
+  .form,
+  .form-search,
+  .default-card {
+    width: 100%;
+  }
+
+  .search__content,
+  .dashboard__forms {
+    display: flex;
+  }
+
+  .dashboard__forms .default-card {
+    flex-grow: 1;
+  }
 }

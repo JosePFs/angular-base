@@ -68,7 +68,8 @@ describe('DashboardComponent', () => {
     const componentSpyAdd = spyOn(component, 'addBook').and.callThrough();
     const componentSpyRemove = spyOn(component, 'removeBook').and.callThrough();
 
-    component.shelves = libraryService.shelves(1, 1);
+    libraryService.setSize(1, 1);
+    component.shelves = libraryService.getShelves();
     component.addBookForm.setValue({ title: '0', author: '0', size: 1 });
 
     debugElement.query(By.css('.form')).triggerEventHandler('submit', null);
@@ -87,7 +88,8 @@ describe('DashboardComponent', () => {
   });
 
   it('should be able to add and remove books', () => {
-    component.shelves = libraryService.shelves(1, 1);
+    libraryService.setSize(1, 1);
+    component.shelves = libraryService.getShelves();
     component.addBookForm.setValue({ title: '0', author: '0', size: 1 });
     component.addBook();
     expect(component.shelves.length).toEqual(1);

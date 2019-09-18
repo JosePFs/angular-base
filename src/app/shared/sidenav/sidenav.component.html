@@ -8,7 +8,7 @@
   >
     <ng-content select="app-sidenav-panel"></ng-content>
   </mat-sidenav>
-  <mat-sidenav-content [attr.role]="main">
+  <mat-sidenav-content>
     <ng-container
       *ngTemplateOutlet="sidenavContent; context: { $implicit: drawer }"
     ></ng-container>

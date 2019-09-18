@@ -11,6 +11,16 @@ export class LinkedList<T> {
 
   constructor() {}
 
+  *[Symbol.iterator](): IterableIterator<Node<T>> {
+    let node = this.head;
+    let counter = 0;
+    while (node) {
+      yield node;
+      node = node.next;
+      counter++;
+    }
+  }
+
   insertAtBeginning(data: T): Node<T> {
     const newNode = new Node<T>(data);
     this.sumSize(data);
@@ -179,14 +189,6 @@ export class LinkedList<T> {
     }
 
     return null;
-  }
-
-  *[Symbol.iterator](): IterableIterator<Node<T>> {
-    let node = this.head;
-    while (node) {
-      yield node;
-      node = node.next;
-    }
   }
 
   getFirst(): Node<T> {

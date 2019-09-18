@@ -25,20 +25,20 @@
         <span class="dashboard__logout" (click)="onLogout()">Logout</span>
       </app-toolbar-actions>
     </app-toolbar>
-    <form
-      class="form"
-      [formGroup]="addBookForm"
-      novalidate
-      (ngSubmit)="addBook()"
-    >
-      <mat-card class="shipping-card">
-        <mat-card-header>
-          <mat-card-title></mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="row">
-            <div class="col">
-              <mat-form-field class="full-width">
+    <div class="row dashboard__forms">
+      <form
+        class="form"
+        [formGroup]="addBookForm"
+        novalidate
+        (ngSubmit)="addBook()"
+      >
+        <mat-card class="default-card">
+          <mat-card-header>
+            <mat-card-title></mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="row">
+              <mat-form-field>
                 <input
                   type="text"
                   matInput
@@ -51,9 +51,7 @@
                   title is <strong>required</strong>
                 </mat-error>
               </mat-form-field>
-            </div>
-            <div class="col">
-              <mat-form-field class="full-width">
+              <mat-form-field>
                 <input
                   type="text"
                   matInput
@@ -66,9 +64,7 @@
                   author is <strong>required</strong>
                 </mat-error>
               </mat-form-field>
-            </div>
-            <div class="col">
-              <mat-form-field class="full-width">
+              <mat-form-field>
                 <input
                   type="number"
                   matInput
@@ -87,20 +83,66 @@
                 </mat-error>
               </mat-form-field>
             </div>
-          </div>
-        </mat-card-content>
-        <mat-card-actions>
-          <button
-            [disabled]="!addBookForm.valid"
-            mat-raised-button
-            color="primary"
-            type="submit"
-          >
-            Add
-          </button>
-        </mat-card-actions>
-      </mat-card>
-    </form>
+          </mat-card-content>
+          <mat-card-actions>
+            <button
+              [disabled]="!addBookForm.valid"
+              mat-raised-button
+              color="primary"
+              type="submit"
+            >
+              Add
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </form>
+      <form
+        class="form-search"
+        [formGroup]="searchForm"
+        novalidate
+        (ngSubmit)="searchBook()"
+      >
+        <mat-card class="default-card">
+          <mat-card-header>
+            <mat-card-title></mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="search__content">
+            <div class="row">
+              <mat-form-field>
+                <input
+                  type="text"
+                  matInput
+                  placeholder="search"
+                  formControlName="search"
+                />
+              </mat-form-field>
+            </div>
+            <div class="search-result" *ngIf="searchResult">
+              <span class="search-result__label"
+                >Shelves: {{ searchResult.shelves }}</span
+              >
+              <span class="search-result__label"
+                >Shelf: {{ searchResult.shelf }}</span
+              >
+              <span class="search-result__label"
+                >Position: {{ searchResult.position }}</span
+              >
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button
+              [disabled]="!searchForm.valid"
+              mat-raised-button
+              color="primary"
+              type="submit"
+            >
+              Search
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </form>
+    </div>
+
     <div *ngFor="let shelving of shelves; trackBy: trackByFn">
       <div
         class="grid-container"

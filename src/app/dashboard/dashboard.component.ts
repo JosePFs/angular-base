@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SearchResult } from 'src/app/core/interfaces/search-result.interface';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LibraryService } from 'src/app/core/services/library.service';
 import { CustomValidators } from 'src/app/core/validators/custom-validators';
@@ -13,6 +14,8 @@ import { CustomValidators } from 'src/app/core/validators/custom-validators';
 export class DashboardComponent implements OnInit {
   shelves: any[];
   addBookForm: FormGroup;
+  searchForm: FormGroup;
+  searchResult: SearchResult;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -22,11 +25,11 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.buildForm();
+    this.buildForms();
     this.getShelves();
   }
 
-  private buildForm() {
+  private buildForms() {
     this.addBookForm = this.formBuilder.group({
       title: [null, Validators.compose([Validators.required])],
       author: [null, Validators.compose([Validators.required])],
@@ -34,24 +37,35 @@ export class DashboardComponent implements OnInit {
         null,
         Validators.compose([
           Validators.required,
-          CustomValidators.maxIntegerValidator(5)
+          CustomValidators.maxIntegerValidator(
+            this.libraryService.getShelfSize()
+          )
         ])
       ]
+    });
+    this.searchForm = this.formBuilder.group({
+      search: [null]
     });
   }
 
   private getShelves() {
-    this.shelves = this.libraryService.shelves(5, 5);
+    this.shelves = this.libraryService.getShelves();
   }
 
   addBook() {
     this.libraryService.add(this.addBookForm.getRawValue());
-    this.shelves = this.libraryService.shelves(5, 5);
+    this.shelves = this.libraryService.getShelves();
   }
 
   removeBook(index: number) {
     this.libraryService.delete(Number(index));
-    this.shelves = this.libraryService.shelves(5, 5);
+    this.shelves = this.libraryService.getShelves();
+  }
+
+  searchBook() {
+    this.searchResult = this.libraryService.search(
+      this.searchForm.get('search').value
+    );
   }
 
   onLogout() {
