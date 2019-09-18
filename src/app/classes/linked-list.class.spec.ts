@@ -11,37 +11,37 @@ describe('LinkedList', () => {
 
     linkedList = new LinkedList();
     let beginningNode = linkedList.insertAtBeginning(bookOne);
-    expect(beginningNode.data).toEqual(linkedList.getFirst().data);
-    expect(linkedList.getFirst().data).toEqual(linkedList.getLast().data);
+    expect(beginningNode).toEqual(linkedList.getFirst());
+    expect(linkedList.getFirst()).toEqual(linkedList.getLast());
     beginningNode = linkedList.insertAtBeginning(bookTwo);
-    expect(beginningNode.data).toEqual(linkedList.getFirst().data);
-    expect(linkedList.getFirst().data).not.toEqual(linkedList.getLast().data);
+    expect(beginningNode).toEqual(linkedList.getFirst());
+    expect(linkedList.getFirst()).not.toEqual(linkedList.getLast());
 
     linkedList = new LinkedList();
     let endNode = linkedList.insertAtEnd(bookOne);
-    expect(endNode.data).toEqual(linkedList.getFirst().data);
-    expect(linkedList.getFirst().data).toEqual(linkedList.getLast().data);
+    expect(endNode).toEqual(linkedList.getFirst());
+    expect(linkedList.getFirst()).toEqual(linkedList.getLast());
     endNode = linkedList.insertAtEnd(bookTwo);
-    expect(endNode.data).toEqual(linkedList.getLast().data);
+    expect(endNode).toEqual(linkedList.getLast());
 
     linkedList = new LinkedList();
     expect(() => linkedList.insertAt(-1, bookOne)).toThrow(Error);
     expect(() => linkedList.insertAt(2, bookOne)).toThrow(Error);
     const firstNode = linkedList.insertAt(0, bookOne);
-    expect(firstNode.data).toEqual(linkedList.getFirst().data);
-    expect(firstNode.data).toEqual(linkedList.getLast().data);
+    expect(firstNode).toEqual(linkedList.getFirst());
+    expect(firstNode).toEqual(linkedList.getLast());
     const secondNode = linkedList.insertAt(1, bookTwo);
-    expect(firstNode.data).toEqual(linkedList.getFirst().data);
-    expect(secondNode.data).toEqual(linkedList.getLast().data);
+    expect(firstNode).toEqual(linkedList.getFirst());
+    expect(secondNode).toEqual(linkedList.getLast());
     const thirdNode = linkedList.insertAt(2, bookThree);
-    expect(thirdNode.data).toEqual(linkedList.getLast().data);
+    expect(thirdNode).toEqual(linkedList.getLast());
     const middleNode = linkedList.getAt(1);
-    expect(middleNode.data).toEqual(secondNode.data);
+    expect(middleNode.data).toEqual(secondNode);
     const fourthNode = linkedList.insertAt(1, bookFour);
-    expect(fourthNode.data).toEqual(linkedList.getAt(1).data);
+    expect(fourthNode).toEqual(linkedList.getAt(1).data);
     const newFirstNode = linkedList.insertAt(0, bookOne);
-    expect(newFirstNode.data).toEqual(linkedList.getAt(0).data);
-    expect(thirdNode.data).toEqual(linkedList.getLast().data);
+    expect(newFirstNode).toEqual(linkedList.getAt(0).data);
+    expect(thirdNode).toEqual(linkedList.getLast());
   });
 
   it('should be able to delete nodes', () => {
@@ -61,7 +61,7 @@ describe('LinkedList', () => {
     linkedList.insertAt(0, bookOne);
     const lastnode = linkedList.insertAt(1, bookTwo);
     linkedList.deleteFirst();
-    expect(lastnode.data).toEqual(linkedList.getFirst().data);
+    expect(lastnode).toEqual(linkedList.getFirst());
 
     linkedList = new LinkedList();
     expect(() => linkedList.deleteLast()).toThrow(Error);
@@ -69,9 +69,9 @@ describe('LinkedList', () => {
     const middleNode = linkedList.insertAt(1, bookTwo);
     linkedList.insertAt(2, bookThree);
     linkedList.deleteLast();
-    expect(middleNode.data).toEqual(linkedList.getLast().data);
+    expect(middleNode).toEqual(linkedList.getLast());
     linkedList.deleteLast();
-    expect(firstNode.data).toEqual(linkedList.getLast().data);
+    expect(firstNode).toEqual(linkedList.getLast());
     linkedList.deleteLast();
     expect(linkedList.getFirst()).toBeNull();
     expect(linkedList.getLast()).toBeNull();
@@ -90,7 +90,7 @@ describe('LinkedList', () => {
     linkedList.insertAt(0, bookOne);
     const nextFirst = linkedList.insertAt(1, bookTwo);
     linkedList.deleteAt(0);
-    expect(nextFirst.data).toEqual(linkedList.getAt(0).data);
+    expect(nextFirst).toEqual(linkedList.getAt(0).data);
     linkedList.deleteAt(0);
     expect(linkedList.getFirst()).toBeNull();
     expect(linkedList.getLast()).toBeNull();
@@ -102,12 +102,12 @@ describe('LinkedList', () => {
     const atFourthNode = linkedList.insertAt(3, bookFive);
     linkedList.insertAt(4, bookFour);
     linkedList.deleteAt(0);
-    expect(atSecondNode.data).toEqual(linkedList.getAt(0).data);
+    expect(atSecondNode).toEqual(linkedList.getAt(0).data);
     linkedList.deleteAt(1);
-    expect(atFourthNode.data).toEqual(linkedList.getAt(1).data);
+    expect(atFourthNode).toEqual(linkedList.getAt(1).data);
     linkedList.deleteAt(2);
-    expect(atFourthNode.data).toEqual(linkedList.getLast().data);
-    expect(atSecondNode.data).toEqual(linkedList.getFirst().data);
+    expect(atFourthNode).toEqual(linkedList.getLast());
+    expect(atSecondNode).toEqual(linkedList.getFirst());
 
     linkedList = new LinkedList();
     linkedList.insertAt(0, bookOne);
@@ -124,14 +124,14 @@ describe('LinkedList', () => {
     linkedList.sortedInsert(sortedBookOne, 'title');
     linkedList.sortedInsert(sortedBookTwo, 'title');
     linkedList.sortedInsert(sortedBookFirst, 'title');
-    expect(sortedBookTwo).toEqual(linkedList.getLast().data);
-    expect(sortedBookFirst).toEqual(linkedList.getFirst().data);
+    expect(sortedBookTwo).toEqual(linkedList.getLast());
+    expect(sortedBookFirst).toEqual(linkedList.getFirst());
 
     linkedList = new LinkedList();
     linkedList.insertAt(0, bookOne);
     linkedList.insertAt(1, bookTwo);
     const linkedToArray = Array.from(linkedList);
-    expect(linkedToArray[0].data['title']).toEqual(bookOne.title);
+    expect(linkedToArray[0]['title']).toEqual(bookOne.title);
   });
 
   it('should be able to calculate size', () => {

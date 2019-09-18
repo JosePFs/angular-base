@@ -11,47 +11,47 @@ export class LinkedList<T> {
 
   constructor() {}
 
-  *[Symbol.iterator](): IterableIterator<Node<T>> {
+  *[Symbol.iterator](): IterableIterator<T> {
     let node = this.head;
     let counter = 0;
     while (node) {
-      yield node;
+      yield node.data;
       node = node.next;
       counter++;
     }
   }
 
-  insertAtBeginning(data: T): Node<T> {
+  insertAtBeginning(data: T): T {
     const newNode = new Node<T>(data);
     this.sumSize(data);
     if (null === this.head) {
       this.head = this.tail = newNode;
 
-      return newNode;
+      return newNode.data;
     }
 
     newNode.next = this.head;
     this.head = newNode;
 
-    return newNode;
+    return newNode.data;
   }
 
-  insertAtEnd(data: T): Node<T> {
+  insertAtEnd(data: T): T {
     const newNode = new Node<T>(data);
     this.sumSize(data);
     if (null === this.head) {
       this.head = this.tail = newNode;
 
-      return newNode;
+      return newNode.data;
     }
 
     this.tail.next = newNode;
     this.tail = newNode;
 
-    return newNode;
+    return newNode.data;
   }
 
-  insertAt(index: number, data: T): Node<T> {
+  insertAt(index: number, data: T): T {
     if (index < 0) {
       throw new Error('Index not valid');
     }
@@ -72,10 +72,10 @@ export class LinkedList<T> {
       this.tail = newNode;
     }
 
-    return newNode;
+    return newNode.data;
   }
 
-  sortedInsert(data: T, by: string): Node<T> {
+  sortedInsert(data: T, by: string): T {
     const newNode = new Node<T>(data);
     this.sumSize(data);
     if (null === this.head || this.head.data[by] >= newNode.data[by]) {
@@ -100,10 +100,10 @@ export class LinkedList<T> {
       current.next = newNode;
     }
 
-    return newNode;
+    return newNode.data;
   }
 
-  deleteAt(index: number): Node<T> | null {
+  deleteAt(index: number): T | null {
     if (null === this.head) {
       throw new Error('Empty list');
     }
@@ -120,7 +120,7 @@ export class LinkedList<T> {
         this.tail = this.head;
       }
 
-      return this.head;
+      return this.head ? this.head.data : null;
     }
 
     const previous = this.getAt(index - 1);
@@ -133,13 +133,13 @@ export class LinkedList<T> {
     if (null === previous.next) {
       this.tail = previous;
 
-      return this.tail;
+      return this.tail.data;
     }
 
-    return this.head;
+    return this.head ? this.head.data : null;
   }
 
-  deleteFirst(): Node<T> | null {
+  deleteFirst(): T | null {
     if (null === this.head) {
       throw new Error('Empty list');
     }
@@ -149,10 +149,10 @@ export class LinkedList<T> {
     }
     this.head = this.head.next;
 
-    return this.head;
+    return this.head ? this.head.data : null;
   }
 
-  deleteLast(): Node<T> | null {
+  deleteLast(): T | null {
     if (null === this.head) {
       throw new Error('Empty list');
     }
@@ -174,7 +174,7 @@ export class LinkedList<T> {
     previous.next = null;
     this.tail = previous;
 
-    return this.tail;
+    return this.tail.data;
   }
 
   getAt(index: number): Node<T> | null {
@@ -191,12 +191,12 @@ export class LinkedList<T> {
     return null;
   }
 
-  getFirst(): Node<T> {
-    return this.head;
+  getFirst(): T | null {
+    return this.head ? this.head.data : null;
   }
 
-  getLast(): Node<T> {
-    return this.tail;
+  getLast(): T | null {
+    return this.tail ? this.tail.data : null;
   }
 
   deleteList() {

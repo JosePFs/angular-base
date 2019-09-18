@@ -42,11 +42,11 @@ export class LibraryService {
   }
 
   getFirst(): Book {
-    return this.books.getFirst().data;
+    return this.books.getFirst();
   }
 
   getLast(): Book {
-    return this.books.getLast().data;
+    return this.books.getLast();
   }
 
   search(title: string): SearchResult {
@@ -57,9 +57,9 @@ export class LibraryService {
     let position = 1;
     let size = 0;
 
-    for (const bookNode of this.books) {
-      if (size + bookNode.data.size > shelfSize) {
-        size = bookNode.data.size;
+    for (const book of this.books) {
+      if (size + book.size > shelfSize) {
+        size = book.size;
         shelf++;
         position = 1;
         if (shelf % shelvesSize === 0) {
@@ -68,9 +68,9 @@ export class LibraryService {
           position = 1;
         }
       } else {
-        size += bookNode.data.size;
+        size += book.size;
       }
-      if (bookNode.data.title === title) {
+      if (book.title === title) {
         return { shelves, shelf, position };
       }
       position++;
@@ -111,6 +111,6 @@ export class LibraryService {
   }
 
   toArray(): Book[] {
-    return Array.from(this.books).map(node => node.data);
+    return Array.from(this.books).map(node => node);
   }
 }
