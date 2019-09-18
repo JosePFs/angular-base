@@ -41,63 +41,73 @@ export class LibraryService {
     return this.shelvesSize;
   }
 
-  getShelves(): Array<Array<Book>> {
-    let shelvesCounter = 0;
-    let shelfsCounter = 0;
-    let shelfSizeAccumulate = 0;
-    return this.toArray().reduce((accumulator, current, index) => {
-      if (current.size > this.shelfSize) {
-        throw new Error('Book too big');
-      }
-      if (shelfSizeAccumulate + current.size > this.shelfSize) {
-        shelfsCounter++;
-        shelfSizeAccumulate = current.size;
-      } else {
-        shelfSizeAccumulate += current.size;
-      }
-      if (shelfsCounter > 0 && shelfsCounter % this.shelvesSize === 0) {
-        shelvesCounter++;
-        shelfsCounter = 0;
-      }
-
-      if (typeof accumulator[shelvesCounter] === 'undefined') {
-        accumulator[shelvesCounter] = [];
-      }
-      if (typeof accumulator[shelvesCounter][shelfsCounter] === 'undefined') {
-        accumulator[shelvesCounter][shelfsCounter] = {};
-      }
-      accumulator[shelvesCounter][shelfsCounter][index] = current;
-
-      return accumulator;
-    }, []);
-  }
-
-  search(title: string): SearchResult {
-    let shelves = 1;
-    let shelf = 1;
-    let position = 1;
-    for (const shelve of this.getShelves()) {
-      for (const books of shelve) {
-        for (const book of Object.values(books)) {
-          if (book.title === title) {
-            return { shelves, shelf, position };
-          }
-          position++;
-        }
-        shelf++;
-        position = 1;
-      }
-      shelf = 1;
-      shelves++;
-    }
-  }
-
   getFirst(): Book {
     return this.books.getFirst().data;
   }
 
   getLast(): Book {
     return this.books.getLast().data;
+  }
+
+  search(title: string): SearchResult {
+    const shelfSize = this.getShelfSize();
+    const shelvesSize = this.getShelvesSize();
+    let shelves = 1;
+    let shelf = 1;
+    let position = 1;
+    let size = 0;
+
+    for (const bookNode of this.books) {
+      if (size + bookNode.data.size > shelfSize) {
+        size = bookNode.data.size;
+        shelf++;
+        position = 1;
+        if (shelf % shelvesSize === 0) {
+          shelves++;
+          shelf = 1;
+          position = 1;
+        }
+      } else {
+        size += bookNode.data.size;
+      }
+      if (bookNode.data.title === title) {
+        return { shelves, shelf, position };
+      }
+      position++;
+    }
+  }
+
+  private getShelves(): Array<Array<Book>> {
+    const shelvesSize = this.getShelvesSize();
+    let shelves = 0;
+    let shelf = 0;
+    let size = 0;
+
+    return this.toArray().reduce((accumulator, current, index) => {
+      if (current.size > this.shelfSize) {
+        throw new Error('Book too big');
+      }
+      if (size + current.size > this.shelfSize) {
+        shelf++;
+        size = current.size;
+        if (shelf % shelvesSize === 0) {
+          shelves++;
+          shelf = 0;
+        }
+      } else {
+        size += current.size;
+      }
+
+      if (typeof accumulator[shelves] === 'undefined') {
+        accumulator[shelves] = [];
+      }
+      if (typeof accumulator[shelves][shelf] === 'undefined') {
+        accumulator[shelves][shelf] = {};
+      }
+      accumulator[shelves][shelf][index] = current;
+
+      return accumulator;
+    }, []);
   }
 
   toArray(): Book[] {

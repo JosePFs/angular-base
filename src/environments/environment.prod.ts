@@ -3,6 +3,6 @@ export const environment = {
   username: 'username',
   password: 'password',
   authUrl: 'assets/mocks/auth.json',
-  shelfSize: 7500,
-  shelvesSize: 5
+  shelfSize: 1500,
+  shelvesSize: 1
 };
