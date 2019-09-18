@@ -19,15 +19,14 @@ describe('LibraryService', () => {
     expect(service.getShelves()[0][0][0]).toEqual(bookOne);
     expect(service.getShelves()[0][0][1]).toEqual(bookTwo);
     expect(service.getShelves()[0][1][2]).toEqual(bookThree);
-    service.setSize(1, 1);
-    expect(() => service.getShelves()).toThrow(Error);
+    expect(() => service.setSize(1, 1)).toThrow(Error);
     service.setSize(3, 1);
     expect(service.getShelves()[0][0][0]).toEqual(bookOne);
     expect(service.getShelves()[0][0][1]).toEqual(bookTwo);
     expect(service.getShelves()[1][0][2]).toEqual(bookThree);
     service.delete(0);
-    expect(service.books.getFirst().data).toEqual(bookTwo);
-    expect(service.books.getLast().data).toEqual(bookThree);
+    expect(service.getFirst()).toEqual(bookTwo);
+    expect(service.getLast()).toEqual(bookThree);
     expect(service.toArray().length).toBe(2);
   });
 });

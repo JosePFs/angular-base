@@ -69,7 +69,6 @@ describe('DashboardComponent', () => {
     const componentSpyRemove = spyOn(component, 'removeBook').and.callThrough();
 
     libraryService.setSize(1, 1);
-    component.shelves = libraryService.getShelves();
     component.addBookForm.setValue({ title: '0', author: '0', size: 1 });
 
     debugElement.query(By.css('.form')).triggerEventHandler('submit', null);
@@ -88,12 +87,44 @@ describe('DashboardComponent', () => {
   });
 
   it('should be able to add and remove books', () => {
+    const componentSpyAdd = spyOn(component, 'addBook').and.callThrough();
+    const componentSpyRemove = spyOn(component, 'removeBook').and.callThrough();
+
     libraryService.setSize(1, 1);
-    component.shelves = libraryService.getShelves();
     component.addBookForm.setValue({ title: '0', author: '0', size: 1 });
+
     component.addBook();
-    expect(component.shelves.length).toEqual(1);
     component.removeBook(0);
-    expect(component.shelves.length).toEqual(0);
+    expect(componentSpyAdd).toHaveBeenCalled();
+    expect(componentSpyRemove).toHaveBeenCalled();
+  });
+
+  it('should be able to set sizes', () => {
+    const componentSpySetSizes = spyOn(component, 'setSizes').and.callThrough();
+
+    component.sizesForm.setValue({ shelfSize: 5, shelvesSize: 5 });
+
+    debugElement
+      .query(By.css('.form-sizes'))
+      .triggerEventHandler('submit', null);
+    fixture.detectChanges();
+
+    expect(componentSpySetSizes).toHaveBeenCalled();
+  });
+
+  it('should be able to search', () => {
+    const componentSpySearchBook = spyOn(
+      component,
+      'searchBook'
+    ).and.callThrough();
+
+    component.searchForm.setValue({ search: 'a' });
+
+    debugElement
+      .query(By.css('.form-search'))
+      .triggerEventHandler('submit', null);
+    fixture.detectChanges();
+
+    expect(componentSpySearchBook).toHaveBeenCalled();
   });
 });

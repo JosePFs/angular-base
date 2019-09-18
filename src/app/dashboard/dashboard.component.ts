@@ -14,7 +14,6 @@ import { CustomValidators } from 'src/app/core/validators/custom-validators';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  shelves: any[];
   addBookForm: FormGroup;
   searchForm: FormGroup;
   sizesForm: FormGroup;
@@ -49,7 +48,7 @@ export class DashboardComponent implements OnInit {
       ]
     });
     this.searchForm = this.formBuilder.group({
-      search: [null]
+      search: [null, Validators.compose([Validators.required])]
     });
     this.sizesForm = this.formBuilder.group({
       shelfSize: [

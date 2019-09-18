@@ -92,6 +92,14 @@ export class LibraryService {
     }
   }
 
+  getFirst(): Book {
+    return this.books.getFirst().data;
+  }
+
+  getLast(): Book {
+    return this.books.getLast().data;
+  }
+
   toArray(): Book[] {
     return Array.from(this.books).map(node => node.data);
   }

@@ -94,7 +94,7 @@ export class LinkedList<T> {
       }
 
       newNode.next = current.next;
-      if (null === current.next) {
+      if (this.tail === current) {
         this.tail = newNode;
       }
       current.next = newNode;
