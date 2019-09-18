@@ -2,6 +2,8 @@
   .grid-container {
     margin: 20px;
     border: 1px solid #cccccc;
+    display: flex;
+    justify-content: space-between;
   }
 
   .dashboard-card {
