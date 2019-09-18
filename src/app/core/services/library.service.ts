@@ -31,6 +31,10 @@ export class LibraryService {
     return this.shelfSize;
   }
 
+  getShelvesSize(): number {
+    return this.shelvesSize;
+  }
+
   getShelves(): Array<Array<Book>> {
     let shelvesCounter = 0;
     let shelfsCounter = 0;

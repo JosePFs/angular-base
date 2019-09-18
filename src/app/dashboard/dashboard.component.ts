@@ -15,6 +15,7 @@ export class DashboardComponent implements OnInit {
   shelves: any[];
   addBookForm: FormGroup;
   searchForm: FormGroup;
+  sizesForm: FormGroup;
   searchResult: SearchResult;
 
   constructor(
@@ -46,6 +47,16 @@ export class DashboardComponent implements OnInit {
     this.searchForm = this.formBuilder.group({
       search: [null]
     });
+    this.sizesForm = this.formBuilder.group({
+      shelfSize: [
+        this.libraryService.getShelfSize(),
+        Validators.compose([Validators.required])
+      ],
+      shelvesSize: [
+        this.libraryService.getShelvesSize(),
+        Validators.compose([Validators.required])
+      ]
+    });
   }
 
   private getShelves() {
@@ -71,6 +82,14 @@ export class DashboardComponent implements OnInit {
   onLogout() {
     this.authService.authenticated = false;
     this.router.navigate(['']);
+  }
+
+  setSizes() {
+    this.libraryService.setSize(
+      this.sizesForm.get('shelfSize').value,
+      this.sizesForm.get('shelvesSize').value
+    );
+    this.shelves = this.libraryService.getShelves();
   }
 
   trackByFn(index: number) {

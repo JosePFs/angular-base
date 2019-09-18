@@ -1,11 +1,48 @@
 <app-sidenav mode="push" class="dashboard">
   <app-sidenav-panel>
     <mat-toolbar>Configuration</mat-toolbar>
-    <mat-nav-list>
-      <a mat-list-item [routerLink]="['/dashboard']">Option 1</a>
-      <a mat-list-item [routerLink]="['/dashboard']">Option 2</a>
-      <a mat-list-item [routerLink]="['/dashboard']">Option 3</a>
-    </mat-nav-list>
+    <form
+      class="form-search"
+      [formGroup]="sizesForm"
+      novalidate
+      (ngSubmit)="setSizes()"
+    >
+      <mat-card class="default-card">
+        <mat-card-header>
+          <mat-card-title></mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="search__content">
+          <div class="col">
+            <mat-form-field>
+              <input
+                type="number"
+                matInput
+                placeholder="shelfSize"
+                formControlName="shelfSize"
+              />
+            </mat-form-field>
+            <mat-form-field>
+              <input
+                type="number"
+                matInput
+                placeholder="shelvesSize"
+                formControlName="shelvesSize"
+              />
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button
+            [disabled]="!sizesForm.valid"
+            mat-raised-button
+            color="primary"
+            type="submit"
+          >
+            Submit
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </form>
   </app-sidenav-panel>
   <ng-container *appSidenavContent="let drawer">
     <app-toolbar>
