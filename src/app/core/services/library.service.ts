@@ -86,7 +86,7 @@ export class LibraryService {
         if (shelf % shelvesSize === 0) {
           shelves++;
           shelf = 0;
-          position = 0;
+          position = 1;
         }
       } else {
         size += current.size;
