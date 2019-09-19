@@ -31,12 +31,25 @@ describe('LibraryService', () => {
     });
 
     service.delete(0);
-    service.shelves$.subscribe(shelves => {
+    service.shelves$.subscribe(_ => {
       expect(service.getFirst()).toEqual(bookTwo);
       expect(service.getLast()).toEqual(bookThree);
       expect(service.toArray().length).toBe(2);
     });
 
     expect(service.search('c')).toEqual({ shelves: 2, shelf: 1, position: 1 });
+  });
+
+  it('should be able to add, get and remove books in index', () => {
+    const service: LibraryService = TestBed.get(LibraryService);
+    const bookOne: Book = { title: 'a', author: '1', size: 1 };
+    const bookTwo: Book = { title: 'b', author: '2', size: 2 };
+    const bookThree: Book = { title: 'c', author: '3', size: 3 };
+
+    service.add(bookOne);
+
+    const map = new Map();
+    map.set(bookOne, { shelves: 1, shelf: 1, position: 1 });
+    expect(service.index['a'][0]).toEqual(map);
   });
 });

@@ -9,13 +9,17 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class LibraryService {
+  private alphabet = 'abcdefghijklmnñopqrstuvxyz0123456789';
   private books: LinkedList<Book> = new LinkedList<Book>();
   private shelfSize: number = environment.shelfSize;
   private shelvesSize: number = environment.shelvesSize;
   private shelves = new BehaviorSubject<Array<Array<Book>>>([]);
   shelves$ = this.shelves.asObservable();
+  index;
 
-  constructor() {}
+  constructor() {
+    this.initIndex();
+  }
 
   add(book: Book) {
     this.books.sortedInsert(book, 'title');
@@ -24,12 +28,14 @@ export class LibraryService {
 
   delete(index: number) {
     this.books.deleteAt(index);
+    this.initIndex();
     this.shelves.next(this.getShelves());
   }
 
   setSize(shelfSize: number, shelvesSize: number) {
     this.shelfSize = shelfSize;
     this.shelvesSize = shelvesSize;
+    this.initIndex();
     this.shelves.next(this.getShelves());
   }
 
@@ -49,32 +55,18 @@ export class LibraryService {
     return this.books.getLast();
   }
 
-  search(title: string): SearchResult {
-    const shelfSize = this.getShelfSize();
-    const shelvesSize = this.getShelvesSize();
-    let shelves = 1;
-    let shelf = 1;
-    let position = 1;
-    let size = 0;
-
-    for (const book of this.books) {
-      if (size + book.size > shelfSize) {
-        size = book.size;
-        shelf++;
-        position = 1;
-        if (shelf % shelvesSize === 0) {
-          shelves++;
-          shelf = 1;
-          position = 1;
+  search(title: string): SearchResult | null {
+    let result: SearchResult;
+    this.index[title.charAt(0).toLocaleLowerCase()].forEach(
+      (map: Map<Book, SearchResult>) => {
+        const [book, position] = map.entries().next().value;
+        if (title === book.title) {
+          result = position;
         }
-      } else {
-        size += book.size;
       }
-      if (book.title === title) {
-        return { shelves, shelf, position };
-      }
-      position++;
-    }
+    );
+
+    return result;
   }
 
   private getShelves(): Array<Array<Book>> {
@@ -82,6 +74,7 @@ export class LibraryService {
     let shelves = 0;
     let shelf = 0;
     let size = 0;
+    let position = 0;
 
     return this.toArray().reduce((accumulator, current, index) => {
       if (current.size > this.shelfSize) {
@@ -93,10 +86,17 @@ export class LibraryService {
         if (shelf % shelvesSize === 0) {
           shelves++;
           shelf = 0;
+          position = 0;
         }
       } else {
         size += current.size;
+        position++;
       }
+      this.addToIndex(current, {
+        shelves: shelves + 1,
+        shelf: shelf + 1,
+        position
+      });
 
       if (typeof accumulator[shelves] === 'undefined') {
         accumulator[shelves] = [];
@@ -108,6 +108,19 @@ export class LibraryService {
 
       return accumulator;
     }, []);
+  }
+
+  private addToIndex(book: Book, searchPosition: SearchResult) {
+    const map = new Map();
+    map.set(book, searchPosition);
+    this.index[book.title.charAt(0).toLocaleLowerCase()].push(map);
+  }
+
+  private initIndex() {
+    this.index = Array.from(this.alphabet).reduce((accu, character) => {
+      accu[character.toLocaleLowerCase()] = [];
+      return accu;
+    }, {});
   }
 
   toArray(): Book[] {
