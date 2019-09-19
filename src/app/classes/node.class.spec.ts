@@ -1,4 +1,4 @@
-import { Book } from 'src/app/core/interfaces/book';
+import { Book } from 'src/app/core/interfaces/book.interface';
 import { Node } from './node.class';
 
 describe('Node', () => {

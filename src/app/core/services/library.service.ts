@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { LinkedList } from 'src/app/classes/linked-list.class';
-import { Book } from 'src/app/core/interfaces/book';
+import { Book } from 'src/app/core/interfaces/book.interface';
+import { IndexInterface } from 'src/app/core/interfaces/index.interface';
 import { SearchResult } from 'src/app/core/interfaces/search-result.interface';
 import { environment } from 'src/environments/environment';
 
@@ -14,28 +15,35 @@ export class LibraryService {
   private shelfSize: number = environment.shelfSize;
   private shelvesSize: number = environment.shelvesSize;
   private shelves = new BehaviorSubject<Array<Array<Book>>>([]);
+  private index: IndexInterface;
   shelves$ = this.shelves.asObservable();
-  index;
 
   constructor() {
     this.initIndex();
   }
 
-  add(book: Book) {
+  add(book: Book): boolean {
+    const size = this.books.getSize() + book.size;
+    if (
+      this.books.getSize() + book.size >
+      this.getShelfSize() * this.getShelvesSize()
+    ) {
+      return false;
+    }
     this.books.sortedInsert(book, 'title');
     this.shelves.next(this.getShelves());
+
+    return true;
   }
 
   delete(index: number) {
     this.books.deleteAt(index);
-    this.initIndex();
     this.shelves.next(this.getShelves());
   }
 
   setSize(shelfSize: number, shelvesSize: number) {
     this.shelfSize = shelfSize;
     this.shelvesSize = shelvesSize;
-    this.initIndex();
     this.shelves.next(this.getShelves());
   }
 
@@ -56,38 +64,39 @@ export class LibraryService {
   }
 
   search(title: string): SearchResult | null {
-    let result: SearchResult;
-    this.index[title.charAt(0).toLocaleLowerCase()].forEach(
-      (map: Map<Book, SearchResult>) => {
-        const [book, position] = map.entries().next().value;
-        if (title === book.title) {
-          result = position;
-        }
+    const foundMap: Map<Book, SearchResult> = this.index[
+      title.charAt(0).toLocaleLowerCase()
+    ].find((map: Map<Book, SearchResult>) => {
+      const [book] = map.entries().next().value;
+      if (title === book.title) {
+        return true;
       }
-    );
+    });
 
-    return result;
+    return foundMap ? foundMap.values().next().value : null;
   }
 
   private getShelves(): Array<Array<Book>> {
     const shelvesSize = this.getShelvesSize();
+    const shelfSize = this.getShelfSize();
     let shelves = 0;
     let shelf = 0;
     let size = 0;
     let position = 0;
 
+    this.initIndex();
     return this.toArray().reduce((accumulator, current, index) => {
-      if (current.size > this.shelfSize) {
+      if (current.size > shelfSize) {
         throw new Error('Book too big');
       }
-      if (size + current.size > this.shelfSize) {
+      if (size + current.size > shelfSize) {
         shelf++;
-        size = current.size;
-        if (shelf % shelvesSize === 0) {
+        if (size > shelvesSize) {
           shelves++;
           shelf = 0;
           position = 1;
         }
+        size = current.size;
       } else {
         size += current.size;
         position++;

@@ -1,4 +1,4 @@
-import { Book } from 'src/app/core/interfaces/book';
+import { Book } from 'src/app/core/interfaces/book.interface';
 import { LinkedList } from './linked-list.class';
 
 describe('LinkedList', () => {
@@ -115,6 +115,14 @@ describe('LinkedList', () => {
     linkedList.deleteList();
     expect(linkedList.getFirst()).toBeNull();
     expect(linkedList.getLast()).toBeNull();
+
+    linkedList = new LinkedList();
+    linkedList.insertAt(0, bookOne);
+    linkedList.insertAt(1, bookTwo);
+    linkedList.insertAt(2, bookThree);
+    linkedList.insertAt(3, bookFour);
+    expect(linkedList.deleteAt(1)).toEqual(linkedList.getFirst());
+    expect(linkedList.deleteAt(2)).toEqual(linkedList.getLast());
 
     linkedList = new LinkedList();
     const sortedBookOne: Book = { title: '2', author: '0', size: 1 };

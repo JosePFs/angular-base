@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Book } from 'src/app/core/interfaces/book';
+import { Book } from 'src/app/core/interfaces/book.interface';
 import { SearchResult } from 'src/app/core/interfaces/search-result.interface';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LibraryService } from 'src/app/core/services/library.service';
@@ -14,11 +14,14 @@ import { CustomValidators } from 'src/app/core/validators/custom-validators';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+  readonly notSpaceErrorString = 'Not enough space';
+
   addBookForm: FormGroup;
   searchForm: FormGroup;
   sizesForm: FormGroup;
   searchResult: SearchResult;
   shelves$: Observable<Book[][]>;
+  notSpaceErrorMessage = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -63,11 +66,15 @@ export class DashboardComponent implements OnInit {
   }
 
   addBook() {
-    this.libraryService.add(this.addBookForm.getRawValue());
+    this.resetNotSpaceErrorMessage();
+    if (!this.libraryService.add(this.addBookForm.getRawValue())) {
+      this.setNotSpaceErrorMessage();
+    }
   }
 
   removeBook(index: number) {
     this.libraryService.delete(Number(index));
+    this.resetNotSpaceErrorMessage();
   }
 
   searchBook() {
@@ -86,9 +93,18 @@ export class DashboardComponent implements OnInit {
       this.sizesForm.get('shelfSize').value,
       this.sizesForm.get('shelvesSize').value
     );
+    this.resetNotSpaceErrorMessage();
   }
 
-  trackByFn(index: number) {
+  resetNotSpaceErrorMessage() {
+    this.notSpaceErrorMessage = '';
+  }
+
+  setNotSpaceErrorMessage() {
+    this.notSpaceErrorMessage = this.notSpaceErrorString;
+  }
+
+  trackByShelves(index: number) {
     return index;
   }
 }

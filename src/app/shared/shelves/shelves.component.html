@@ -1,0 +1,33 @@
+<div
+  class="grid-container grid-list-container"
+  *ngFor="let shelf of shelves | keyvalue; trackBy: trackByShelf"
+>
+  <mat-card *ngFor="let book of shelf.value | keyvalue; trackBy: trackByBook">
+    <mat-card-header>
+      <mat-card-title>
+        {{ book.value.title }}
+        <button
+          mat-icon-button
+          class="more-button"
+          [matMenuTriggerFor]="menu"
+          aria-label="Toggle menu"
+        >
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu" xPosition="before">
+          <button
+            class="remove-book"
+            mat-menu-item
+            (click)="removeBook.next(book.key)"
+          >
+            Remove
+          </button>
+        </mat-menu>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="dashboard-card-content">
+      <div>Author: {{ book.value.author }}</div>
+      <div>Size: {{ book.value.size }}</div>
+    </mat-card-content>
+  </mat-card>
+</div>

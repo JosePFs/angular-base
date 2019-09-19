@@ -127,4 +127,23 @@ describe('DashboardComponent', () => {
 
     expect(componentSpySearchBook).toHaveBeenCalled();
   });
+
+  it('should be able to show not enough space error', () => {
+    const componentSpySetNotSpaceErrorMessage = spyOn(
+      component,
+      'setNotSpaceErrorMessage'
+    ).and.callThrough();
+
+    libraryService.setSize(1, 1);
+    component.addBookForm.setValue({ title: '0', author: '0', size: 2 });
+    component.addBook();
+    fixture.detectChanges();
+
+    expect(
+      fixture.debugElement.query(By.css('.not-space-error')).nativeElement
+        .textContent
+    ).toContain(component.notSpaceErrorString);
+
+    expect(componentSpySetNotSpaceErrorMessage).toHaveBeenCalled();
+  });
 });

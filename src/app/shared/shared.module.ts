@@ -13,6 +13,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { ShelvesComponent } from './shelves/shelves.component';
 import { SidenavContentDirective } from './sidenav/sidenav-content.directive';
 import { SidenavPanelDirective } from './sidenav/sidenav-panel.directive';
 import { SidenavComponent } from './sidenav/sidenav.component';
@@ -27,7 +28,8 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     ToolbarActionsDirective,
     ToolbarTitleDirective,
     SidenavPanelDirective,
-    SidenavContentDirective
+    SidenavContentDirective,
+    ShelvesComponent
   ],
   imports: [
     CommonModule,
@@ -66,7 +68,8 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     ToolbarTitleDirective,
     SidenavComponent,
     SidenavPanelDirective,
-    SidenavContentDirective
+    SidenavContentDirective,
+    ShelvesComponent
   ]
 })
 export class SharedModule {}
